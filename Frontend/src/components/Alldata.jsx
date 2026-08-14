@@ -11,7 +11,7 @@ export const Alldata = ({ children }) => {
 
   const getdata = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/note");
+      const response = await axios.get("https://major-project-dgt0.onrender.com/note");
       setData(response.data.note || []);
     } catch (error) {
       console.error("Error fetching data:", error);
