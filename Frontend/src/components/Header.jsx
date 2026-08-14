@@ -7,7 +7,7 @@ const Header = () => {
     <div className="text-2xl font-bold">AXIS</div>
     <div className="space-x-6">
       <Link to='/'>Home</Link>
-      <Link to='/about'>About</Link>
+      <Link to='/about'>About</Link> 
       <Link to='/contact'>Contact</Link>
     </div>
   </nav>
