@@ -4,6 +4,7 @@ import './index.css'
 import App from './App.jsx'
 import {BrowserRouter} from 'react-router-dom'
 import Alldata from './components/Alldata.jsx'
+import 'remixicon/fonts/remixicon.css';
 
 createRoot(document.getElementById('root')).render(
 
