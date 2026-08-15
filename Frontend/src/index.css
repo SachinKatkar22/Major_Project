@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+.info{
+    background:linear-gradient(to top, rgb(243, 186, 79), #ebf5fb);
+
+}
+.back_header{
+    
+    background:linear-gradient(to top, transparent, #ebf5fb);
+
+}
