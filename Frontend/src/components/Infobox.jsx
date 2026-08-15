@@ -50,7 +50,7 @@ const Infobox = () => {
         </div>
 
         {/* ==================== CARD 2: CURRENT YEAR GROWTH (Highlighted) ==================== */}
-        <div className="bg-linear-to-br from-green-500 to-orange-400 text-white rounded-3xl p-6 shadow-2xl border border-indigo-800/50 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-indigo-950/30 relative overflow-hidden">
+        <div className="bg-linear-to-br from-indigo-900 to-blue-950 text-white rounded-3xl p-6 shadow-2xl border border-indigo-800/50 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-indigo-950/30 relative overflow-hidden">
           {/* Decorative glow element */}
           <div className="absolute -right-10 -top-10 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl pointer-events-none"></div>
 
@@ -69,12 +69,12 @@ const Infobox = () => {
                 <span className="text-base font-extrabold text-blue-400">+{current_people}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-indigo-200 font-medium">Funds Raised</span>
+                <span className="text-sm text-indigo-200 font-medium">Total Amount</span>
                 <span className="text-base font-extrabold text-emerald-400">₹{current_amount+(4500)}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-indigo-200 font-medium">Target Gap</span>
-                <span className="text-base font-extrabold text-amber-400">₹4,500</span>
+                <span className="text-sm text-indigo-200 font-medium">Remaining Balance</span>
+                <span className="text-base font-extrabold text-amber-400">Not Available</span>
               </div>
             </div>
           </div>
