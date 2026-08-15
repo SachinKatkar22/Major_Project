@@ -4,7 +4,7 @@ import logoImage from '../assets/images.jpeg';
 const Header = () => {
   return (
     <div>
-      <nav className="back_header  fixed w-full z-50 p-6 flex justify-around items-center text-black  shadow-sm">
+      <nav className="back_header  fixed w-full z-50 p-5 flex justify-around items-center text-black  shadow-sm">
         
         <div className="flex items-center space-x-3">
           {/* Replace the src with your uploaded logo link or local asset */}
@@ -15,7 +15,7 @@ const Header = () => {
           />
           <div className="text-2xl font-bold tracking-tight">EMN</div>
         </div>
-        <div className="space-x-6 font-medium">
+        <div className="space-x-5 font-medium">
           <Link to='/' className="hover:text-white transition">
           <i className="ri-home-4-line text-lg"></i> Home</Link>
           <Link to='/about' className="hover:text-white transition">
