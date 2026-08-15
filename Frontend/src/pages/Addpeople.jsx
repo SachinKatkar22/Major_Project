@@ -3,40 +3,39 @@ import axios from 'axios';
 import React, { useState } from 'react';
 
 const Addpeople = () => {
-    const [firstName,setFirstName]=useState('');
-    const [lastName,setLastName]=useState('');
-    const [mobileNumber,setMobileNumber]=useState('');
-    const [amount,setAmount]=useState('');
-    const [year,setYear]=useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [mobileNumber, setMobileNumber] = useState('');
+    const [amount, setAmount] = useState('');
+    const [year, setYear] = useState('');
 
-  
-
-  const handleSubmit =async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const data={
-    firstName,
-    lastName,
-    mobileNumber, // Updated state name
-    amount,
-    year
-  
-  }
-   // console.log('Form Submitted:', data);
-    // Here you would typically send the data to your backend
+    const data = {
+      firstName,
+      lastName,
+      mobileNumber, 
+      amount,
+      year
+    };
 
-    const responce= await axios.post("http://localhost:3000/note",data,{
-      headers:{
-        "Content-Type":"application/json"
-      }
-    })
-    console.log(responce.data);
-     setFirstName('')
-     setLastName('')
-     setAmount('')
-     setMobileNumber('')
-     setYear('')
-     alert("Data submitted successfully!");
-
+    try {
+      const response = await axios.post("https://major-project-dgt0.onrender.com/note", data, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+      console.log(response.data);
+      setFirstName('');
+      setLastName('');
+      setAmount('');
+      setMobileNumber('');
+      setYear('');
+      alert("Data submitted successfully!");
+    } catch (error) {
+      console.error("Error submitting data:", error);
+      alert("Failed to submit data. Please check your connection.");
+    }
   };
 
   const currentYear = new Date().getFullYear();
@@ -85,9 +84,7 @@ const Addpeople = () => {
                   name="firstName"
                   required
                   value={firstName}
-                  onChange={(e)=>{
-                    setFirstName(e.target.value)
-                  }}
+                  onChange={(e) => setFirstName(e.target.value)}
                   placeholder="John"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition"
                 />
@@ -102,29 +99,25 @@ const Addpeople = () => {
                   name="lastName"
                   required
                   value={lastName}
-                  onChange={(e)=>{
-                    setLastName(e.target.value)
-                  }}
+                  onChange={(e) => setLastName(e.target.value)}
                   placeholder="Doe"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition"
                 />
               </div>
             </div>
 
-            {/* Mobile Number Field (Replaced Email) */}
+            {/* Mobile Number Field */}
             <div>
               <label htmlFor="mobileNumber" className="block text-sm font-semibold text-gray-700 mb-1.5">
                 Mobile Number <span className="text-red-500">*</span>
               </label>
               <input
-                type="tel" // Use 'tel' type for mobile numbers
+                type="tel"
                 id="mobileNumber"
                 name="mobileNumber"
                 required
                 value={mobileNumber}
-                onChange={(e)=>{
-                    setMobileNumber(e.target.value)
-                }}
+                onChange={(e) => setMobileNumber(e.target.value)}
                 placeholder="+91 9876543210"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition"
               />
@@ -137,7 +130,6 @@ const Addpeople = () => {
                   Contribution Amount (₹) <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  {/* Changed $ to ₹ */}
                   <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500">₹</span>
                   <input
                     type="number"
@@ -145,11 +137,9 @@ const Addpeople = () => {
                     name="amount"
                     required
                     min="1"
-                    step="1" // Usually rupees don't use decimals in basic forms, change to "0.01" if needed
+                    step="1"
                     value={amount}
-                    onChange={(e)=>{
-                        setAmount(e.target.value)
-                    }}
+                    onChange={(e) => setAmount(e.target.value)}
                     placeholder="5000"
                     className="w-full pl-9 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition"
                   />
@@ -165,22 +155,18 @@ const Addpeople = () => {
                   name="year"
                   required
                   value={year}
-                  onChange={(e)=>{
-                    setYear(e.target.value)
-                  }}
+                  onChange={(e) => setYear(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition bg-white"
                 >
                   <option value="" disabled>-- Choose Year --</option>
-                  {years.map((year) => (
-                    <option key={year} value={year}>
-                      {year}
+                  {years.map((yr) => (
+                    <option key={yr} value={yr}>
+                      {yr}
                     </option>
                   ))}
                 </select>
               </div>
             </div>
-
-
 
             {/* Submit Button */}
             <div className="pt-6">
@@ -195,7 +181,6 @@ const Addpeople = () => {
           </form>
         </div>
       </div>
-      
     </div>
   );
 };

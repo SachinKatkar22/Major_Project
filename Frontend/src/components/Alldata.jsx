@@ -39,4 +39,4 @@ export const Alldata = ({ children }) => {
 
 // 3. Custom hook to easily use the data anywhere
 export const useData = () => useContext(DataContext);
-export default Alldata
+export default Alldata;
