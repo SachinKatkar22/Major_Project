@@ -47,10 +47,13 @@ const Page1 = () => {
           {/* Two Action Buttons */}
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
             <Link to='/login' className="bg-white text-gray-900 font-semibold px-8 py-3 rounded-full hover:bg-gray-100 transition shadow-lg w-full sm:w-auto">
-              Add People
+             <i className="ri-user-add-fill"></i> Add People
             </Link>
             <Link to='/moredetail' className="bg-transparent border-2 border-white text-white font-semibold px-8 py-3 rounded-full hover:bg-white hover:text-gray-900 transition w-full sm:w-auto">
-              More Details
+              <i className="ri-more-fill"></i> More Details
+            </Link>
+             <Link to='/gallery' className="bg-transparent border-2 border-white text-white font-semibold px-8 py-3 rounded-full hover:bg-white hover:text-gray-900 transition w-full sm:w-auto">
+              <i className="ri-multi-image-line"></i> Gallery
             </Link>
           </div>
         </div>
