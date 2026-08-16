@@ -22,6 +22,7 @@ const Header = () => {
           <i className="ri-information-line text-lg"></i> About</Link> 
           <Link to='/contact' className="hover:text-white transition">
           <i className="ri-contacts-book-line text-lg"></i> Contact</Link>
+          <Link to='/gallery'>Gallery</Link>
         </div>
       </nav>
      

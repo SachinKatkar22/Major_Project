@@ -8,6 +8,9 @@ const notschema= new mongoose.Schema({
     year:Date
     
 })
+
+
+
 const noteModel=mongoose.model("note",notschema)
 
 module.exports=noteModel
