@@ -1,6 +1,7 @@
 // src/components/Addpeople.jsx
 import axios from 'axios';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Addpeople = () => {
     const [firstName, setFirstName] = useState('');
@@ -43,6 +44,7 @@ const Addpeople = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 md:p-8 font-sans">
+     
       <div className="bg-white mt-15 w-full max-w-4xl rounded-3xl shadow-xl overflow-hidden grid grid-cols-1 md:grid-cols-12 border border-gray-100">
         
         {/* Left Information Panel */}
@@ -169,7 +171,7 @@ const Addpeople = () => {
             </div>
 
             {/* Submit Button */}
-            <div className="pt-6">
+            <div className="pt-6 flex gap-4">
               <button
                 type="submit"
                 className="w-full sm:w-auto px-10 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md shadow-blue-500/30 text-lg transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-200"
@@ -177,8 +179,11 @@ const Addpeople = () => {
                 Add Supporter to Database
               </button>
             </div>
+            
+         
 
           </form>
+          
         </div>
       </div>
     </div>

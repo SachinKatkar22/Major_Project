@@ -44,16 +44,19 @@ const Page1 = () => {
           <h1 className="text-4xl md:text-6xl font-bold mb-4">{slides[current].title}</h1>
           <p className="text-lg md:text-xl text-gray-200 mb-8">{slides[current].subtitle}</p>
           
-          {/* Two Action Buttons */}
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <Link to='/login' className="bg-white text-gray-900 font-semibold px-8 py-3 rounded-full hover:bg-gray-100 transition shadow-lg w-full sm:w-auto">
+          {/* Action Buttons: 2x2 Grid on mobile, Flex row on desktop */}
+          <div className="grid grid-cols-2 sm:flex sm:flex-row justify-center items-center gap-3 sm:gap-4 max-w-md sm:max-w-none mx-auto">
+            <Link to='/login' className="bg-white text-gray-900 font-semibold px-4 py-2.5 sm:px-8 sm:py-3 rounded-full hover:bg-gray-100 transition shadow-lg text-sm sm:text-base text-center">
              <i className="ri-user-add-fill"></i> Add People
             </Link>
-            <Link to='/moredetail' className="bg-transparent border-2 border-white text-white font-semibold px-8 py-3 rounded-full hover:bg-white hover:text-gray-900 transition w-full sm:w-auto">
+            <Link to='/moredetail' className="bg-transparent border-2 border-white text-white font-semibold px-4 py-2.5 sm:px-8 sm:py-3 rounded-full hover:bg-white hover:text-gray-900 transition text-sm sm:text-base text-center">
               <i className="ri-more-fill"></i> More Details
             </Link>
-             <Link to='/gallery' className="bg-transparent border-2 border-white text-white font-semibold px-8 py-3 rounded-full hover:bg-white hover:text-gray-900 transition w-full sm:w-auto">
+             <Link to='/gallery' className="bg-transparent border-2 border-white text-white font-semibold px-4 py-2.5 sm:px-8 sm:py-3 rounded-full hover:bg-white hover:text-gray-900 transition text-sm sm:text-base text-center">
               <i className="ri-multi-image-line"></i> Gallery
+            </Link>
+             <Link to='/moneyHistory' className="bg-transparent border-2 border-white text-white font-semibold px-4 py-2.5 sm:px-8 sm:py-3 rounded-full hover:bg-white hover:text-gray-900 transition text-sm sm:text-base text-center">
+              <i className="ri-history-line"></i> History
             </Link>
           </div>
         </div>

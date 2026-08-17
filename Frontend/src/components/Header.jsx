@@ -31,6 +31,7 @@ const Header = () => {
             <i className="ri-contacts-book-line text-base sm:text-lg"></i> 
             <span className="hidden xs:inline">Contact</span>
           </Link>
+           
         </div>
       </nav>
     </div>
