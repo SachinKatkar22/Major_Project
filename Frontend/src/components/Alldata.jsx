@@ -40,7 +40,11 @@ export const Alldata = ({ children }) => {
 
   const totalPeople = data.length;
   const totalamount = data.reduce((sum, item) => sum + Number(item.amount || 0), 0);
-  const totalMoneyHistoryAmount = moneyHistory.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  
+  // Calculated only for the year 2026
+  const totalMoneyHistoryAmount = moneyHistory
+    .filter(item => String(item.year) === "2026")
+    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
   return (
     <DataContext.Provider 
