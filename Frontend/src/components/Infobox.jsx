@@ -13,7 +13,7 @@ const Infobox = () => {
   // Current year specific calculations
   const current_people = totalPeople - last_year_totalpeople;
   const current_amount = totalamount+last_year_remaining - last_year_totalamount;
-  const remainingBalance = current_amount - totalMoneyHistoryAmount;
+  const remainingBalance = current_amount-totalMoneyHistoryAmount
 
   return (
     <div className="relative z-10 max-w-6xl mx-auto px-4 -mt-20">
