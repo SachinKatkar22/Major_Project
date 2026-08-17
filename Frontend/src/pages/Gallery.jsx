@@ -5,10 +5,9 @@ const Gallery = () => {
   const [images, setImages] = useState([]);
   const [selectedYear, setSelectedYear] = useState('All');
   const [yearInput, setYearInput] = useState('');
-  const [fileInput, setFileInput] = useState(null);
+  const [filesInput, setFilesInput] = useState([]); // Changed to handle multiple files
   const [uploading, setUploading] = useState(false);
 
-  // Fetch images on mount
   const fetchImages = async () => {
     try {
       const res = await axios.get("https://major-project-dgt0.onrender.com/gallery");
@@ -22,31 +21,40 @@ const Gallery = () => {
     fetchImages();
   }, []);
 
-  // Convert image to base64 for upload
+  // Handle multiple files conversion to base64
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFileInput(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
+    const selectedFiles = Array.from(e.target.files);
+    Promise.all(
+      selectedFiles.map(file => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve({ base64: reader.result, name: file.name });
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      })
+    ).then(results => {
+      setFilesInput(results);
+    });
   };
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    if (!fileInput || !yearInput) return alert("Please select a file and enter a year.");
+    if (filesInput.length === 0 || !yearInput) return alert("Please select files and enter a year.");
     
     setUploading(true);
     try {
-      await axios.post("https://major-project-dgt0.onrender.com/gallery/upload", {
-        file: fileInput,
-        fileName: `gallery_${Date.now()}.jpg`,
-        year: yearInput
-      });
-      alert("Uploaded successfully!");
-      setFileInput(null);
+      // Loop through and upload each image
+      for (let fileObj of filesInput) {
+        await axios.post("https://major-project-dgt0.onrender.com/gallery/upload", {
+          file: fileObj.base64,
+          fileName: `gallery_${Date.now()}_${fileObj.name}`,
+          year: yearInput
+        });
+      }
+
+      alert("All images uploaded successfully!");
+      setFilesInput([]);
       setYearInput('');
       fetchImages();
     } catch (err) {
@@ -71,17 +79,16 @@ const Gallery = () => {
     }
   };
 
-  // Extract unique years for filtering tabs
   const years = ['All', ...new Set(images.map(img => img.year))];
   const filteredImages = selectedYear === 'All' ? images : images.filter(img => img.year === selectedYear);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-24 font-sans">
-      <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Community Gallery & Memories</h2>
+      <h2 className="text-3xl mt-10 font-bold text-gray-900 mb-8 text-center">Community Gallery & Memories</h2>
 
       {/* Upload Form Box */}
       <div className="bg-white p-6 rounded-2xl shadow-md border border-gray-100 mb-12 max-w-xl mx-auto">
-        <h3 className="text-lg font-semibold mb-4">Upload New Memory</h3>
+        <h3 className="text-lg font-semibold mb-4">Upload Memories (Multiple Allowed)</h3>
         <form onSubmit={handleUpload} className="space-y-4">
           <input 
             type="text" 
@@ -94,6 +101,7 @@ const Gallery = () => {
           <input 
             type="file" 
             accept="image/*" 
+            multiple /* <--- Added multiple attribute */
             onChange={handleFileChange}
             className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
             required 
@@ -103,7 +111,7 @@ const Gallery = () => {
             disabled={uploading}
             className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition"
           >
-            {uploading ? "Uploading to ImageKit..." : "Upload Image"}
+            {uploading ? "Uploading images to ImageKit..." : "Upload Images"}
           </button>
         </form>
       </div>

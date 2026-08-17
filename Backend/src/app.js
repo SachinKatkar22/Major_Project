@@ -1,9 +1,11 @@
 const express = require("express")
 const noteModel = require("./models/note.model")
 const galleryRoutes = require("./routes/galleryRoutes")
+const moneyRoutes = require("./routes/moneyRoutes");
+
 const app = express()
 const cors = require("cors")
-
+app.use("/money", moneyRoutes);
 // Increase body size limits to handle image uploads
 app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ limit: '50mb', extended: true }))

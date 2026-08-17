@@ -3,6 +3,7 @@ import { useData } from './Alldata';
 
 const Infobox = () => {
   const { totalPeople, totalamount } = useData();
+  const {totalMoneyHistoryAmount}=useData();
   
   // Historical & Calculated values
   const last_year_totalpeople = 40;
@@ -11,7 +12,8 @@ const Infobox = () => {
 
   // Current year specific calculations
   const current_people = totalPeople - last_year_totalpeople;
-  const current_amount = totalamount - last_year_totalamount;
+  const current_amount = totalamount+last_year_remaining - last_year_totalamount;
+  const remainingBalance = current_amount - totalMoneyHistoryAmount;
 
   return (
     <div className="relative z-10 max-w-6xl mx-auto px-4 -mt-20">
@@ -70,11 +72,11 @@ const Infobox = () => {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-indigo-200 font-medium">Total Amount</span>
-                <span className="text-base font-extrabold text-emerald-400">₹{current_amount+(4500)}</span>
+                <span className="text-base font-extrabold text-emerald-400">₹{current_amount}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-indigo-200 font-medium">Remaining Balance</span>
-                <span className="text-base font-extrabold text-amber-400">Not Available</span>
+                <span className="text-base font-extrabold text-amber-400">₹{remainingBalance}</span>
               </div>
             </div>
           </div>

@@ -12,6 +12,7 @@ import Addpeople from './pages/Addpeople'
 import axios from "axios"
 import Infobox from './components/Infobox'
 import Gallery from './pages/Gallery'
+import MoneyHistory from './pages/MoneyHistory'
 const App = () => {
   return (
     <div className="font-sans">
@@ -26,6 +27,7 @@ const App = () => {
         <Route path='/moredetail' element={<Moredetail/>}/>
         <Route path='/Addpeople' element={<Addpeople/>}/>
         <Route path='/gallery' element={<Gallery/>}/>
+        <Route path='/moneyHistory' element={<MoneyHistory/>}/>
       </Routes>
 
 
