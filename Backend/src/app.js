@@ -45,6 +45,12 @@ app.get("/note", async (req, res) => {
     })
 })
 
+app.get("/test",async(req,res)=>{
+    res.status(200).json({
+        message:"Backend Runing"
+    })
+})
+
 app.use("/gallery", galleryRoutes)
 
 module.exports = app
