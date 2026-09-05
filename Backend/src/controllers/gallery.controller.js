@@ -1,5 +1,7 @@
-const gallery=require("../models/galleryModel")
+
+const Gallery = require("../models/galleryModel");
 const ImageKit = require('imagekit');
+// ... keep the rest of your gallery functions the same
 
 
 const imagekit = new ImageKit({
