@@ -11,7 +11,7 @@ export const Alldata = ({ children }) => {
   // Fetch /note data
   const getdata = async () => {
     try {
-      const response = await axios.get("https://major-project-dgt0.onrender.com/note");
+      const response = await axios.get("https://major-project-dgt0.onrender.com/note/alldata");
       setData(response.data.note || []);
     } catch (error) {
       console.error("Error fetching note data:", error);
@@ -21,7 +21,7 @@ export const Alldata = ({ children }) => {
   // Fetch /money history data
   const getMoneyHistory = async () => {
     try {
-      const response = await axios.get("https://major-project-dgt0.onrender.com/money");
+      const response = await axios.get("https://major-project-dgt0.onrender.com/money/allmoney");
       setMoneyHistory(response.data || []);
     } catch (error) {
       console.error("Error fetching money history data:", error);

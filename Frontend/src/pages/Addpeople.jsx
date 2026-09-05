@@ -21,7 +21,7 @@ const Addpeople = () => {
     };
 
     try {
-      const response = await axios.post("https://major-project-dgt0.onrender.com/note", data, {
+      const response = await axios.post("https://major-project-dgt0.onrender.com/note/register", data, {
         headers: {
           "Content-Type": "application/json"
         }

@@ -10,7 +10,7 @@ const Gallery = () => {
 
   const fetchImages = async () => {
     try {
-      const res = await axios.get("https://major-project-dgt0.onrender.com/gallery");
+      const res = await axios.get("https://major-project-dgt0.onrender.com/gallery/allimg");
       setImages(res.data);
     } catch (err) {
       console.error(err);

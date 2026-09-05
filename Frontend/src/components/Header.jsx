@@ -14,7 +14,7 @@ const Header = () => {
             alt="Logo" 
             className="w-8 h-8 sm:w-10 sm:h-10 object-cover rounded-full border border-gray-200" 
           />
-          <div className="text-xl sm:text-2xl font-bold tracking-tight">EMN</div>
+          <div className="text-xl sm:text-2xl font-bold tracking-tight">sachin</div>
         </div>
 
         {/* Navigation Links */}
