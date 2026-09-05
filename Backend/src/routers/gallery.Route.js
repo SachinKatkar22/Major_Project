@@ -1,20 +1,20 @@
-// routes/galleryRoutes.js
-import express from 'express';
-import ImageKit from 'imagekit';
-import Gallery from '../models/galleryModel.js';
-const gallerycontrller=require("../controllers/gallery.controller.js")
+// src/routes/galleryRoutes.js
+const express = require('express');
+//const ImageKit = require('imagekit');
+//const Gallery = require('../models/galleryModel');
+const gallerycontrller=require("../controllers/gallery.controller")
 
 const router = express.Router();
 
-// Initialize ImageKit (configure with your credentials)
-const imagekit = new ImageKit({
-  publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
-  privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
-  urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT
-});
+// const imagekit = new ImageKit({
+//   publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
+//   privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
+//   urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT
+// });
 
 // Get all images
-router.get("/",gallerycontrller.image)
+
+router.get("/allimg",gallerycontrller.image)
 
 // router.get('/', async (req, res) => {
 //   try {
@@ -26,12 +26,11 @@ router.get("/",gallerycontrller.image)
 // });
 
 // Upload image endpoint
-
 router.post("/upload",gallerycontrller.uploadimg)
 
 // router.post('/upload', async (req, res) => {
 //   try {
-//     const { file, fileName, year } = req.body; // Expecting base64 file string from frontend
+//     const { file, fileName, year } = req.body;
     
 //     const uploadResponse = await imagekit.upload({
 //       file: file,
@@ -53,7 +52,6 @@ router.post("/upload",gallerycontrller.uploadimg)
 // });
 
 // Delete image endpoint with password check
-
 router.delete("/:id",gallerycontrller.deletimg)
 
 // router.delete('/:id', async (req, res) => {
@@ -66,10 +64,7 @@ router.delete("/:id",gallerycontrller.deletimg)
 //     const imageDoc = await Gallery.findById(req.params.id);
 //     if (!imageDoc) return res.status(404).json({ error: "Image not found" });
 
-//     // Delete from ImageKit storage
 //     await imagekit.deleteFile(imageDoc.fileId);
-
-//     // Delete from MongoDB collection
 //     await Gallery.findByIdAndDelete(req.params.id);
 
 //     res.status(200).json({ message: "Image deleted successfully" });
@@ -78,4 +73,4 @@ router.delete("/:id",gallerycontrller.deletimg)
 //   }
 // });
 
-export default router;
+module.exports = router;

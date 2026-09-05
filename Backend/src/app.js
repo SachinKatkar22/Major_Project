@@ -1,8 +1,9 @@
 const express = require("express")
 const cors = require("cors")
 const noteModel = require("./models/note.model")
-const galleryRoutes = require("./routes/galleryRoutes")
-const moneyRoutes = require("./routes/moneyRoutes");
+const galleryRoutes = require("./routers/gallery.Route")
+const moneyRoutes = require("./routers/money.Route");
+const userRoutes=require("./routers/user.Route")
 
 const app = express()
 
@@ -20,30 +21,32 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }))
 // 3. Define Routes after middleware
 app.use("/money", moneyRoutes);
 
-app.post("/note", async (req, res) => {
-    const data = req.body
+app.use("/note",userRoutes);
 
-    await noteModel.create({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        mobileNumber: data.mobileNumber, 
-        amount: data.amount,
-        year: data.year
-    })
+// app.post("/note", async (req, res) => {
+//     const data = req.body
 
-    res.status(201).json({
-        message: "Note created Successfully"
-    })
-})
+//     await noteModel.create({
+//         firstName: data.firstName,
+//         lastName: data.lastName,
+//         mobileNumber: data.mobileNumber, 
+//         amount: data.amount,
+//         year: data.year
+//     })
 
-app.get("/note", async (req, res) => {
-    const note = await noteModel.find()
+//     res.status(201).json({
+//         message: "Note created Successfully"
+//     })
+// })
+  app.use("/note",userRoutes);
+// app.get("/note", async (req, res) => {
+//     const note = await noteModel.find()
 
-    res.status(200).json({
-        message: "Note Fetched Successfully",
-        note: note
-    })
-})
+//     res.status(200).json({
+//         message: "Note Fetched Successfully",
+//         note: note
+//     })
+// })
 
 app.get("/test",async(req,res)=>{
     res.status(200).json({
@@ -51,6 +54,6 @@ app.get("/test",async(req,res)=>{
     })
 })
 
-app.use("/gallery", galleryRoutes)
+app.use("/gallery", galleryRoutes);
 
 module.exports = app

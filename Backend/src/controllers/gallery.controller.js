@@ -1,9 +1,6 @@
-// src/routes/galleryRoutes.js
-const express = require('express');
+const gallery=require("../models/galleryModel")
 const ImageKit = require('imagekit');
-const Gallery = require('../models/galleryModel');
 
-const router = express.Router();
 
 const imagekit = new ImageKit({
   publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
@@ -11,19 +8,18 @@ const imagekit = new ImageKit({
   urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT
 });
 
-// Get all images
-router.get('/', async (req, res) => {
-  try {
-    const images = await Gallery.find().sort({ createdAt: -1 });
-    res.status(200).json(images);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
 
-// Upload image endpoint
-router.post('/upload', async (req, res) => {
-  try {
+async function image(req,res) {
+    try {
+        const images = await Gallery.find().sort({ createdAt: -1 });
+        res.status(200).json(images);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+}
+
+async function uploadimg(req,res) {
+     try {
     const { file, fileName, year } = req.body;
     
     const uploadResponse = await imagekit.upload({
@@ -43,11 +39,10 @@ router.post('/upload', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-});
+}
 
-// Delete image endpoint with password check
-router.delete('/:id', async (req, res) => {
-  try {
+async function deletimg(req,res) {
+    try {
     const { password } = req.body;
     if (password !== "832969") {
       return res.status(401).json({ error: "Incorrect password!" });
@@ -63,6 +58,6 @@ router.delete('/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-});
+}
 
-module.exports = router;
+module.exports={image,uploadimg,deletimg}
