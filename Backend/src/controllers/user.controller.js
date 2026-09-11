@@ -1,5 +1,24 @@
 const noteModel = require("../models/note.model");
 
+// async function register(req, res) {
+//     try {
+//         const data = req.body;
+
+//         await noteModel.create({
+//             firstName: data.firstName,
+//             lastName: data.lastName,
+//             mobileNumber: data.mobileNumber, 
+//             amount: data.amount,
+//             year: string(data.year)
+//         });
+
+//         res.status(201).json({
+//             message: "Note created Successfully"
+//         });
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// }
 async function register(req, res) {
     try {
         const data = req.body;
@@ -7,9 +26,9 @@ async function register(req, res) {
         await noteModel.create({
             firstName: data.firstName,
             lastName: data.lastName,
-            mobileNumber: data.mobileNumber, 
-            amount: data.amount,
-            year: string(data.year)
+            mobileNumber: Number(data.mobileNumber), // Convert if schema uses Number
+            amount: Number(data.amount),             // Convert if schema uses Number
+            year: String(data.year)
         });
 
         res.status(201).json({
