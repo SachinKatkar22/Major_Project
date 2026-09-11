@@ -9,7 +9,7 @@ async function register(req, res) {
             lastName: data.lastName,
             mobileNumber: data.mobileNumber, 
             amount: data.amount,
-            year: data.year
+            year: string(data.year)
         });
 
         res.status(201).json({
