@@ -5,7 +5,7 @@ const notschema= new mongoose.Schema({
     lastName:String,
     mobileNumber:Number, 
     amount:Number,
-    year:Date
+    year:String
     
 })
 
