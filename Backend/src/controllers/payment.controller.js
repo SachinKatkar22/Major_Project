@@ -2,18 +2,24 @@ const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const Payment = require("../models/payment.model");
 
-const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
-
 async function createOrder(req, res) {
     try {
+        console.log("Incoming order request body:", req.body);
         const { amount } = req.body;
-        
+
         if (!amount) {
-            return res.status(400).json({ error: "Amount is required" });
+            return res.status(400).json({ error: "Amount is missing from request body." });
         }
+
+        if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+            console.error("CRITICAL: Razorpay keys are missing from Render environment variables!");
+            return res.status(500).json({ error: "Razorpay keys are missing on the server." });
+        }
+
+        const razorpay = new Razorpay({
+            key_id: process.env.RAZORPAY_KEY_ID,
+            key_secret: process.env.RAZORPAY_KEY_SECRET,
+        });
 
         const options = {
             amount: Number(amount) * 100, // Amount in paise
@@ -24,7 +30,7 @@ async function createOrder(req, res) {
         const order = await razorpay.orders.create(options);
         res.status(200).json(order);
     } catch (error) {
-        console.error("Razorpay Order Error:", error); // Check Render logs for this!
+        console.error("Razorpay Order Error Details:", error);
         res.status(500).json({ error: error.message });
     }
 }
