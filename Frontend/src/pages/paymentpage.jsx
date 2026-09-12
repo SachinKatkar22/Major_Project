@@ -40,10 +40,10 @@ export default function PaymentPage() {
 
             // 2. Open Razorpay Checkout Modal
             const options = {
-                key: "YOUR_RAZORPAY_KEY_ID", // Replace with your live/test Razorpay Key ID
+                key: "rzp_test_YOUR_ACTUAL_KEY_ID", // Replace with your real Razorpay Key ID (or import.meta.env.VITE_RAZORPAY_KEY_ID)
                 amount: order.amount,
                 currency: order.currency,
-                name: "Your Project Name",
+                name: "Ekta Mandal Narayanpur",
                 description: "Transaction Payment",
                 order_id: order.id,
                 handler: async function (response) {
@@ -76,12 +76,12 @@ export default function PaymentPage() {
             paymentObject.open();
         } catch (error) {
             console.error(error);
-            alert("Could not initiate payment process.");
+            alert("Could not initiate payment process. Check backend connection.");
         }
     };
 
     return (
-        <div style={{ maxWidth: "500px",margin:" auto", paddingTop: "100px", fontFamily: "sans-serif" }}>
+        <div style={{ maxWidth: "500px", margin: "auto", paddingTop: "100px", fontFamily: "sans-serif" }}>
             {!receiptData ? (
                 <form onSubmit={handlePayment} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
                     <h2>Secure Payment Form</h2>
@@ -100,7 +100,7 @@ export default function PaymentPage() {
                     <p><strong>Payment ID:</strong> {receiptData.paymentId}</p>
                     <p><strong>Order ID:</strong> {receiptData.orderId}</p>
                     <p><strong>Year:</strong> {receiptData.year}</p>
-                    <button onClick={() => window.print()} style={{ padding: "10px 15px", background: "green", color: "#white", border: "none", cursor: "pointer" }}>
+                    <button onClick={() => window.print()} style={{ padding: "10px 15px", background: "green", color: "#fff", border: "none", cursor: "pointer", marginTop: "10px" }}>
                         Download / Print Receipt
                     </button>
                 </div>
