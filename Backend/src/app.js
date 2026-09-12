@@ -5,6 +5,8 @@ const galleryRoutes = require("./routers/gallery.Route")
 const moneyRoutes = require("./routers/money.Route");
 const userRoutes=require("./routers/user.Route")
 
+const paymentRoutes = require("./routers/payment.Route");
+
 const app = express()
 
 // 1. Enable CORS first so preflight requests succeed for all routes
@@ -55,5 +57,7 @@ app.get("/test",async(req,res)=>{
 })
 
 app.use("/gallery", galleryRoutes);
+
+app.use("/payment", paymentRoutes);
 
 module.exports = app
