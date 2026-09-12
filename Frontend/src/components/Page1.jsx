@@ -58,6 +58,9 @@ const Page1 = () => {
              <Link to='/moneyHistory' className="bg-transparent border-2 border-white text-white font-semibold px-4 py-2.5 sm:px-8 sm:py-3 rounded-full hover:bg-white hover:text-gray-900 transition text-sm sm:text-base text-center">
               <i className="ri-history-line"></i> History
             </Link>
+              <Link to='/payment' className="bg-transparent border-2 border-white text-white font-semibold px-4 py-2.5 sm:px-8 sm:py-3 rounded-full hover:bg-white hover:text-gray-900 transition text-sm sm:text-base text-center">
+              <i className="ri-history-line"></i> Payment
+            </Link>
           </div>
         </div>
       </div>
