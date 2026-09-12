@@ -10,27 +10,24 @@ const razorpay = new Razorpay({
 async function createOrder(req, res) {
     try {
         const { amount } = req.body;
+        
+        if (!amount) {
+            return res.status(400).json({ error: "Amount is required" });
+        }
+
         const options = {
-            amount: Number(amount) * 100, // amount in the smallest currency unit (paise)
+            amount: Number(amount) * 100, // Amount in paise
             currency: "INR",
             receipt: `receipt_${Date.now()}`
         };
+        
         const order = await razorpay.orders.create(options);
         res.status(200).json(order);
     } catch (error) {
+        console.error("Razorpay Order Error:", error); // Check Render logs for this!
         res.status(500).json({ error: error.message });
     }
 }
-async function getAllPayments(req, res) {
-    try {
-        const payments = await Payment.find().sort({ createdAt: -1 });
-        res.status(200).json(payments);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-}
-
-
 
 async function verifyPayment(req, res) {
     try {
@@ -42,9 +39,7 @@ async function verifyPayment(req, res) {
             .update(body.toString())
             .digest("hex");
 
-        const isAuthentic = expectedSignature === razorpay_signature;
-
-        if (isAuthentic) {
+        if (expectedSignature === razorpay_signature) {
             const currentYear = new Date().getFullYear().toString();
             
             const newPayment = new Payment({
@@ -60,15 +55,25 @@ async function verifyPayment(req, res) {
             await newPayment.save();
 
             res.status(200).json({
-                message: "Payment verified and saved successfully",
+                message: "Payment verified successfully",
                 payment: newPayment
             });
         } else {
-            res.status(400).json({ error: "Invalid signature, payment verification failed" });
+            res.status(400).json({ error: "Invalid payment signature" });
         }
+    } catch (error) {
+        console.error("Payment Verification Error:", error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+async function getAllPayments(req, res) {
+    try {
+        const payments = await Payment.find().sort({ createdAt: -1 });
+        res.status(200).json(payments);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 }
 
-module.exports = { createOrder, verifyPayment ,getAllPayments};
+module.exports = { createOrder, verifyPayment, getAllPayments };
