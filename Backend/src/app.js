@@ -59,6 +59,8 @@ app.get("/test",async(req,res)=>{
 
 app.use("/gallery", galleryRoutes);
 
-app.use("/payment", paymentRoutes);
+
+app.use("/manual-payment", paymentRoutes);
+
 
 module.exports = app
