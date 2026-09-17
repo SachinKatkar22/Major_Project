@@ -1,7 +1,6 @@
 const ImageKit = require("imagekit");
-const ManualPayment = require("../models/payment.model"); // or your manual payment model
+const ManualPayment = require("../models/payment.model");
 
-// Helper function to get initialized ImageKit instance safely
 const getImageKitInstance = () => {
     return new ImageKit({
         publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
@@ -12,7 +11,7 @@ const getImageKitInstance = () => {
 
 async function submitPayment(req, res) {
     try {
-        const imagekit = getImageKitInstance(); // Initialized safely inside the function execution
+        const imagekit = getImageKitInstance();
         const { name } = req.body;
         const file = req.file;
 
