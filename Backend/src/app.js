@@ -8,6 +8,7 @@ const userRoutes=require("./routers/user.Route")
 const paymentRoutes = require("./routers/payment.Route");
 
 const app = express()
+app.use(express.json())
 
 // 1. Enable CORS first so preflight requests succeed for all routes
 app.use(cors({
