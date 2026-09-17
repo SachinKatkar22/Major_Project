@@ -1,110 +1,122 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import QR from "../assets/QR.jpeg"
 
-const loadScript = (src) => {
-    return new Promise((resolve) => {
-        const script = document.createElement("script");
-        script.src = src;
-        script.onload = () => resolve(true);
-        script.onerror = () => resolve(false);
-        document.body.appendChild(script);
-    });
-};
 
-export default function PaymentPage() {
-    const [formData, setFormData] = useState({
-        firstName: "",
-        lastName: "",
-        email: "",
-        amount: ""
-    });
-    const [receiptData, setReceiptData] = useState(null);
+export default function ManualPaymentPage() {
+    const [name, setName] = useState("");
+    const [imageFile, setImageFile] = useState(null);
+    const [payments, setPayments] = useState([]);
+    const [loading, setLoading] = useState(false);
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+    const fetchPayments = async () => {
+        try {
+            const { data } = await axios.get("https://major-project-dgt0.onrender.com/manual-payment/all");
+            setPayments(data);
+        } catch (err) {
+            console.error("Error fetching payments:", err);
+        }
     };
 
-    const handlePayment = async (e) => {
-        e.preventDefault();
-        const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
+    useEffect(() => {
+        fetchPayments();
+    }, []);
 
-        if (!res) {
-            alert("Razorpay SDK failed to load. Are you online?");
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!name || !imageFile) {
+            alert("Please provide your name and select a payment screenshot.");
             return;
         }
 
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("image", imageFile);
+
+        setLoading(true);
         try {
-            // 1. Create order on backend
-            const orderUrl = "https://major-project-dgt0.onrender.com/payment/create-order";
-            const { data: order } = await axios.post(orderUrl, { amount: formData.amount });
-
-            // 2. Open Razorpay Checkout Modal
-            const options = {
-                key: "rzp_test_YOUR_ACTUAL_KEY_ID", // Replace with your real Razorpay Key ID (or import.meta.env.VITE_RAZORPAY_KEY_ID)
-                amount: order.amount,
-                currency: order.currency,
-                name: "Ekta Mandal Narayanpur",
-                description: "Transaction Payment",
-                order_id: order.id,
-                handler: async function (response) {
-                    try {
-                        const verifyUrl = "https://major-project-dgt0.onrender.com/payment/verify";
-                        const { data } = await axios.post(verifyUrl, {
-                            razorpay_order_id: response.razorpay_order_id,
-                            razorpay_payment_id: response.razorpay_payment_id,
-                            razorpay_signature: response.razorpay_signature,
-                            firstName: formData.firstName,
-                            lastName: formData.lastName,
-                            email: formData.email,
-                            amount: formData.amount
-                        });
-                        setReceiptData(data.payment);
-                        alert("Payment successful and saved!");
-                    } catch (err) {
-                        console.error(err);
-                        alert("Payment verification failed on server.");
-                    }
-                },
-                prefill: {
-                    name: `${formData.firstName} ${formData.lastName}`,
-                    email: formData.email,
-                },
-                theme: { color: "#3399cc" }
-            };
-
-            const paymentObject = new window.Razorpay(options);
-            paymentObject.open();
-        } catch (error) {
-            console.error(error);
-            alert("Could not initiate payment process. Check backend connection.");
+            await axios.post("https://major-project-dgt0.onrender.com/manual-payment/submit", formData, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
+            alert("Payment proof uploaded to ImageKit and saved successfully!");
+            setName("");
+            setImageFile(null);
+            fetchPayments(); // Refresh the list
+        } catch (err) {
+            console.error(err);
+            alert("Failed to upload payment proof.");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div style={{ maxWidth: "500px", margin: "auto", paddingTop: "100px", fontFamily: "sans-serif" }}>
-            {!receiptData ? (
-                <form onSubmit={handlePayment} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-                    <h2>Secure Payment Form</h2>
-                    <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required style={{ padding: "10px" }} />
-                    <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} required style={{ padding: "10px" }} />
-                    <input type="email" name="email" placeholder="Email Address" value={formData.email} onChange={handleChange} required style={{ padding: "10px" }} />
-                    <input type="number" name="amount" placeholder="Amount (INR)" value={formData.amount} onChange={handleChange} required style={{ padding: "10px" }} />
-                    <button type="submit" style={{ padding: "12px", background: "#3399cc", color: "#fff", border: "none", cursor: "pointer", fontWeight: "bold" }}>Pay Now</button>
-                </form>
-            ) : (
-                <div id="receipt" style={{ border: "1px solid #ccc", padding: "20px", borderRadius: "8px" }}>
-                    <h3>Payment Receipt</h3>
-                    <p><strong>Name:</strong> {receiptData.firstName} {receiptData.lastName}</p>
-                    <p><strong>Email:</strong> {receiptData.email}</p>
-                    <p><strong>Amount Paid:</strong> ₹{receiptData.amount}</p>
-                    <p><strong>Payment ID:</strong> {receiptData.paymentId}</p>
-                    <p><strong>Order ID:</strong> {receiptData.orderId}</p>
-                    <p><strong>Year:</strong> {receiptData.year}</p>
-                    <button onClick={() => window.print()} style={{ padding: "10px 15px", background: "green", color: "#fff", border: "none", cursor: "pointer", marginTop: "10px" }}>
-                        Download / Print Receipt
-                    </button>
-                </div>
-            )}
+        <div style={{ maxWidth: "600px", margin: "auto", padding: "20px", fontFamily: "sans-serif", paddingTop:"100px"}}>
+            <h2 style={{marginLeft:"200px"}}>Scan & Pay</h2>
+            
+            {/* QR Code Section */}
+            <div style={{ textAlign: "center", marginBottom: "30px", border: "1px solid #ddd", padding: "15px", borderRadius: "8px", alignItems:"center",justifyContent:"center", display:"flex" }}>
+                <p style={{fontSize:"10px"}}>Scan the QR code using any UPI app:</p>
+                <img 
+                    src={QR} 
+                    alt="Payment QR Code" 
+                    style={{ width: "300px", height: "300px", objectFit: "contain" }} 
+                />
+              
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "40px" }}>
+                <h3>Upload Payment Screenshot</h3>
+                <input 
+                    type="text" 
+                    placeholder="Your Full Name" 
+                    value={name} 
+                    onChange={(e) => setName(e.target.value)} 
+                    required 
+                    style={{ padding: "10px" }} 
+                />
+                <input 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={(e) => setImageFile(e.target.files[0])} 
+                    required 
+                    style={{ padding: "10px" }} 
+                />
+                <button 
+                    type="submit" 
+                    disabled={loading} 
+                    style={{ padding: "12px", background: "#28a745", color: "#fff", border: "none", cursor: "pointer", fontWeight: "bold" }}
+                >
+                    {loading ? "Uploading to ImageKit..." : "Submit Payment Record"}
+                </button>
+            </form>
+
+            <hr />
+
+            {/* Bottom Gallery Section */}
+            <div>
+                <h3>All Payment Submissions</h3>
+                {payments.length === 0 ? (
+                    <p>No payments recorded yet.</p>
+                ) : (
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: "15px", marginTop: "15px" }}>
+                        {payments.map((p) => (
+                            <div key={p._id} style={{ border: "1px solid #ccc", padding: "12px", borderRadius: "8px", background: "#f9f9f9" }}>
+                                <p style={{ margin: "0 0 8px 0", fontWeight: "bold" }}>{p.name}</p>
+                                <img 
+                                    src={p.imageurl} 
+                                    alt="Payment Receipt" 
+                                    style={{ width: "100%", height: "150px", objectFit: "cover", borderRadius: "4px" }} 
+                                />
+                                <p style={{ fontSize: "12px", color: "#777", marginTop: "5px" }}>
+                                    {new Date(p.date).toLocaleDateString()}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

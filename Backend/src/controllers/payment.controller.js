@@ -1,85 +1,56 @@
-const Razorpay = require("razorpay");
-const crypto = require("crypto");
-const Payment = require("../models/payment.model");
+const ImageKit = require("imagekit");
+const ManualPayment = require("../models/payment.model");
 
-async function createOrder(req, res) {
+const imagekit = new ImageKit({
+    publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
+    privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
+    urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT
+});
+
+// Submit payment with file upload
+async function submitPayment(req, res) {
     try {
-        console.log("Incoming order request body:", req.body);
-        const { amount } = req.body;
+        const { name } = req.body;
+        const file = req.file;
 
-        if (!amount) {
-            return res.status(400).json({ error: "Amount is missing from request body." });
+        if (!name || !file) {
+            return res.status(400).json({ error: "Name and payment screenshot are required." });
         }
 
-        if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
-            console.error("CRITICAL: Razorpay keys are missing from Render environment variables!");
-            return res.status(500).json({ error: "Razorpay keys are missing on the server." });
-        }
+        // Upload image buffer to ImageKit
+        imagekit.upload({
+            file: file.buffer, // required
+            fileName: `payment_${Date.now()}_${file.originalname}`, // required
+            folder: "/payments"
+        }, async function(error, result) {
+            if (error) {
+                console.error("ImageKit Upload Error:", error);
+                return res.status(500).json({ error: "Failed to upload image to ImageKit." });
+            }
 
-        const razorpay = new Razorpay({
-            key_id: process.env.RAZORPAY_KEY_ID,
-            key_secret: process.env.RAZORPAY_KEY_SECRET,
-        });
-
-        const options = {
-            amount: Number(amount) * 100, // Amount in paise
-            currency: "INR",
-            receipt: `receipt_${Date.now()}`
-        };
-        
-        const order = await razorpay.orders.create(options);
-        res.status(200).json(order);
-    } catch (error) {
-        console.error("Razorpay Order Error Details:", error);
-        res.status(500).json({ error: error.message });
-    }
-}
-
-async function verifyPayment(req, res) {
-    try {
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature, firstName, lastName, email, amount } = req.body;
-
-        const body = razorpay_order_id + "|" + razorpay_payment_id;
-        const expectedSignature = crypto
-            .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-            .update(body.toString())
-            .digest("hex");
-
-        if (expectedSignature === razorpay_signature) {
-            const currentYear = new Date().getFullYear().toString();
-            
-            const newPayment = new Payment({
-                firstName,
-                lastName,
-                email,
-                amount,
-                orderId: razorpay_order_id,
-                paymentId: razorpay_payment_id,
-                year: currentYear
+            // Save record to MongoDB with ImageKit URL
+            const newPayment = new ManualPayment({
+                name,
+                imageurl: result.url
             });
 
             await newPayment.save();
+            res.status(201).json({ message: "Payment submitted successfully!", payment: newPayment });
+        });
 
-            res.status(200).json({
-                message: "Payment verified successfully",
-                payment: newPayment
-            });
-        } else {
-            res.status(400).json({ error: "Invalid payment signature" });
-        }
     } catch (error) {
-        console.error("Payment Verification Error:", error);
-        res.status(500).json({ error: error.message });
+        console.error("Server Error:", error);
+        res.status(500).json({ error: "Server error while processing payment." });
     }
 }
 
 async function getAllPayments(req, res) {
     try {
-        const payments = await Payment.find().sort({ createdAt: -1 });
+        const payments = await ManualPayment.find().sort({ date: -1 });
         res.status(200).json(payments);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: "Server error while fetching payments." });
     }
 }
 
-module.exports = { createOrder, verifyPayment, getAllPayments };
+module.exports = { submitPayment, getAllPayments };

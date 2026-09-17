@@ -1,9 +1,12 @@
 const express = require("express");
-const { createOrder, verifyPayment ,getAllPayments} = require("../controllers/payment.controller");
+const multer = require("multer");
+const { submitPayment, getAllPayments } = require("../controllers/payment.controller");
 const router = express.Router();
 
-router.post("/create-order", createOrder);
-router.post("/verify", verifyPayment);
+// Configure multer for memory storage
+const upload = multer({ storage: multer.memoryStorage() });
+
+router.post("/submit", upload.single("image"), submitPayment);
 router.get("/all", getAllPayments);
 
 module.exports = router;
